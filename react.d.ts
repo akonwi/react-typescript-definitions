@@ -11,189 +11,198 @@ declare module 'react' {
 }
 
 declare module React {
-  /**
-   * Configure React's event system to handle touch events on mobile devices.
-   * @param shouldUseTouch true if React should active touch events, false if it should not
-   */
+	/**
+  	 * Configure React's event system to handle touch events on mobile devices.
+  	 * @param shouldUseTouch true if React should active touch events, false if it should not
+  	 */
 	function initializeTouchEvents(shouldUseTouch: boolean): void;
 
-  /**
-   * Create a component given a specification. A component implements a render method which returns one single child.
-   * That child may have an arbitrarily deep child structure.
-   * One thing that makes components different than standard prototypal classes is that you don't need to call new on them.
-   * They are convenience wrappers that construct backing instances (via new) for you.
-   *
-   * @param spec the component specification
-   */
+  	/**
+  	 * Create a component given a specification. A component implements a render method which returns one single child.
+  	 * That child may have an arbitrarily deep child structure.
+  	 * One thing that makes components different than standard prototypal classes is that you don't need to call new on them.
+   	 * They are convenience wrappers that construct backing instances (via new) for you.
+   	 *
+   	 * @param spec the component specification
+   	 */
 	function createClass(specification: ComponentSpec): Component;
 
-  /**
-   * Render a React component into the DOM in the supplied container.
-   * If the React component was previously rendered into container,
-   * this will perform an update on it and only mutate the DOM as necessary to reflect the latest React component.
-   *
-   * @param component the component to render
-   * @param container the node that should contain the result of rendering
-   * @param callback an optional callback that will be executed after the component is rendered or updated.
-   */
+	/**
+  	 * Render a React component into the DOM in the supplied container.
+  	 * If the React component was previously rendered into container,
+  	 * this will perform an update on it and only mutate the DOM as necessary to reflect the latest React component.
+  	 *
+  	 * @param component the component to render
+  	 * @param container the node that should contain the result of rendering
+  	 * @param callback an optional callback that will be executed after the component is rendered or updated.
+  	 */
 	function renderComponent(component: Component, container: HTMLElement, callback?: Function): Component;
 
-  /**
-   * Remove a mounted React component from the DOM and clean up its event handlers and state.
-   * If no component was mounted in the container, calling this function does nothing.
-   * Returns true if a component was unmounted and false if there was no component to unmount.
-   *
-   * @param container the node that should be cleaned from React component
-   */
-  function unmountComponentAtNode(container: HTMLElement): boolean;
+    /**
+   	 * Remove a mounted React component from the DOM and clean up its event handlers and state.
+   	 * If no component was mounted in the container, calling this function does nothing.
+   	 * Returns true if a component was unmounted and false if there was no component to unmount.
+   	 *
+   	 * @param container the node that should be cleaned from React component
+   	 */
+	function unmountComponentAtNode(container: HTMLElement): boolean;
 
-  /**
-   * Render a component to its initial HTML. This should only be used on the server.
-   * React will call callback with an HTML string when the markup is ready.
-   * You can use this method to can generate HTML on the server and send the markup down on the initial request for faster page loads
-   * and to allow search engines to crawl your pages for SEO purposes.
-   * If you call React.renderComponent() on a node that already has this server-rendered markup,
-   * React will preserve it and only attach event handlers, allowing you to have a very performant first-load experience.
-   *
-   * @param component the component to render
-   */
+	/**
+  	 * Render a component to its initial HTML. This should only be used on the server.
+  	 * React will call callback with an HTML string when the markup is ready.
+  	 * You can use this method to can generate HTML on the server and send the markup down on the initial request for faster page loads
+  	 * and to allow search engines to crawl your pages for SEO purposes.
+  	 * If you call React.renderComponent() on a node that already has this server-rendered markup,
+  	 * React will preserve it and only attach event handlers, allowing you to have a very performant first-load experience.
+  	 *
+  	 * @param component the component to render
+  	 */
 	function renderComponentToString(component: Component): string;
 
-  /**
-   * Similar to renderComponentToString, except this doesn't create extra DOM attributes such as data-react-id,
-   * that React uses internally. This is useful if you want to use React as a simple static page generator,
-   * as stripping away the extra attributes can save lots of bytes.
-   *
-   * @param component the component to render
-   */
+	/**
+  	 * Similar to renderComponentToString, except this doesn't create extra DOM attributes such as data-react-id,
+  	 * that React uses internally. This is useful if you want to use React as a simple static page generator,
+  	 * as stripping away the extra attributes can save lots of bytes.
+  	 *
+  	 * @param component the component to render
+  	 */
 	function renderComponentToStaticMarkup(component: Component): string;
 
-  /**
-   * Component classses created by createClass() return instances of ReactComponent when called.
-   * Most of the time when you're using React you're either creating or consuming these component objects.
-   */
+	/**
+  	 * Component classses created by createClass() return instances of ReactComponent when called.
+  	 * Most of the time when you're using React you're either creating or consuming these component objects.
+  	 */
 	interface Component {
-    /**
-     * Collection of named elements returned from render().
-     */
+		new (): Component;
+
+		/**
+    	 * Collection of named elements returned from render().
+    	 */
 		refs: { [ref: string]: Component; }
 
-    /**
-     * If this component has been mounted into the DOM, this returns the corresponding native browser DOM element.
-     * This method is useful for reading values out of the DOM, such as form field values and performing DOM measurements.
-     */
+		/**
+    	 * If this component has been mounted into the DOM, this returns the corresponding native browser DOM element.
+    	 * This method is useful for reading values out of the DOM, such as form field values and performing DOM measurements.
+    	 */
 		getDOMNode(): HTMLElement;
 
-    /**
-     * When you're integrating with an external JavaScript application you may want to signal a change to a React component rendered with renderComponent().
-     * Simply call setProps() to change its properties and trigger a re-render.
-     *
-     * @param nextProps the object that will be merged with the component's props
-     * @param callback an optional callback function that is executed once setProps is completed.
-     */
+		/**
+    	 * When you're integrating with an external JavaScript application you may want to signal a change to a React component rendered with renderComponent().
+    	 * Simply call setProps() to change its properties and trigger a re-render.
+    	 *
+    	 * @param nextProps the object that will be merged with the component's props
+    	 * @param callback an optional callback function that is executed once setProps is completed.
+    	 */
 		setProps(nextProps: Object, callback?: Function): void;
 
-    /**
-     * Like setProps() but deletes any pre-existing props instead of merging the two objects.
-     *
-     * @param nextProps the object that will replace the component's props
-     * @param callback an optional callback function that is executed once replaceProps is completed.
-     */
+		/**
+    	 * Like setProps() but deletes any pre-existing props instead of merging the two objects.
+    	 *
+    	 * @param nextProps the object that will replace the component's props
+    	 * @param callback an optional callback function that is executed once replaceProps is completed.
+    	 */
 		replaceProps(nextProps: Object, callback?: Function): void;
 
-    /**
-     * Transfer properties from this component to a target component that have not already been set on the target component.
-     * After the props are updated, targetComponent is returned as a convenience.
-     *
-     * @param target the component that will receive the props
-     */
+		/**
+    	 * Transfer properties from this component to a target component that have not already been set on the target component.
+    	 * After the props are updated, targetComponent is returned as a convenience.
+    	 *
+    	 * @param target the component that will receive the props
+    	 */
 		transferPropsTo(target: Component): Component;
 
-    /**
-     * Merges nextState with the current state.
-     * This is the primary method you use to trigger UI updates from event handlers and server request callbacks.
-     * In addition, you can supply an optional callback function that is executed once setState is completed.
-     *
-     * @param nextState the object that will be merged with the component's state
-     * @param callback an optional callback function that is executed once setState is completed.
-     */
+		/**
+    	 * Merges nextState with the current state.
+    	 * This is the primary method you use to trigger UI updates from event handlers and server request callbacks.
+    	 * In addition, you can supply an optional callback function that is executed once setState is completed.
+    	 *
+    	 * @param nextState the object that will be merged with the component's state
+    	 * @param callback an optional callback function that is executed once setState is completed.
+    	 */
 		setState(nextState: Object, callback?: Function): void;
 
-    /**
-     * Like setState() but deletes any pre-existing state keys that are not in nextState.
-     *
-     * @param nextState the object that will replace the component's state
-     * @param callback an optional callback function that is executed once replaceState is completed.
-     */
+		/**
+    	 * Like setState() but deletes any pre-existing state keys that are not in nextState.
+    	 *
+    	 * @param nextState the object that will replace the component's state
+    	 * @param callback an optional callback function that is executed once replaceState is completed.
+    	 */
 		replaceState(nextState: Object, callback?: Function): void;
 
-    /**
-     * If your render() method reads from something other than this.props or this.state,
-     * you'll need to tell React when it needs to re-run render() by calling forceUpdate().
-     * You'll also need to call forceUpdate() if you mutate this.state directly.
-     * Calling forceUpdate() will cause render() to be called on the component and its children,
-     * but React will still only update the DOM if the markup changes.
-     * Normally you should try to avoid all uses of forceUpdate() and only read from this.props and this.state in render().
-     * This makes your application much simpler and more efficient.
-     *
-     * @param callback an optional callback that is executed once forceUpdate is completed.
-     */
+		/**
+    	 * If your render() method reads from something other than this.props or this.state,
+    	 * you'll need to tell React when it needs to re-run render() by calling forceUpdate().
+    	 * You'll also need to call forceUpdate() if you mutate this.state directly.
+    	 * Calling forceUpdate() will cause render() to be called on the component and its children,
+    	 * but React will still only update the DOM if the markup changes.
+    	 * Normally you should try to avoid all uses of forceUpdate() and only read from this.props and this.state in render().
+    	 * This makes your application much simpler and more efficient.
+    	 *
+    	 * @param callback an optional callback that is executed once forceUpdate is completed.
+    	 */
 		forceUpdate(callback?: Function): void;
 
-    /**
-     * Returns true if the component is rendered into the DOM, false otherwise.
-     * You can use this method to guard asynchronous calls to setState() or forceUpdate().
-     */
+		/**
+    	 * Returns true if the component is rendered into the DOM, false otherwise.
+    	 * You can use this method to guard asynchronous calls to setState() or forceUpdate().
+    	 */
 		isMounted(): boolean;
 	}
 
-  /**
-   * Provides utilities for dealing with the this.props.children opaque data structure.
-   */
+	/**
+  	 * Provides utilities for dealing with the this.props.children opaque data structure.
+  	 */
 	module Children {
-    /**
-     * Invoke fn on every immediate child contained within children with this set to context.
-     * If children is a nested object or array, it will be traversed: fn will never be passed the container objects.
-     * If chilren is null or undefined, returns null or undefined rather than an empty object.
-     *
-     * @param children the collection of children elements
-     * @param fn the callback to execute on each child
-     * @context the object that this will be
-     */
+		/**
+    	 * Invoke fn on every immediate child contained within children with this set to context.
+    	 * If children is a nested object or array, it will be traversed: fn will never be passed the container objects.
+    	 * If chilren is null or undefined, returns null or undefined rather than an empty object.
+    	 *
+    	 * @param children the collection of children elements
+    	 * @param fn the callback to execute on each child
+    	 * @context the object that this will be
+    	 */
 		function map(children: Object, fn: (child: any) => void, context?: Object): Object;
 
-    /**
-     * Like React.Children.map() but does not return an object.
-     *
-     * @param children the collection of children elements
-     * @param fn the callback to execute on each child
-     * @context the object that this will be
-     */
+		/**
+    	 * Like React.Children.map() but does not return an object.
+    	 *
+    	 * @param children the collection of children elements
+    	 * @param fn the callback to execute on each child
+    	 * @context the object that this will be
+    	 */
 		function each(children: Object, fn: Function, context?: Object): void;
 
-    /**
-     * Return the only child in children. Throws otherwise.
-     *
-     * @param children the collection of children elements
-     */
+		/**
+    	 * Return the only child in children. Throws otherwise.
+    	 *
+    	 * @param children the collection of children elements
+    	 */
 		function only(children: Object): Object;
 	}
 
 	var PropTypes: {
-		any: Function;
-		array: Function;
-		arrayOf: Function;
-		bool: Function;
-		component: Function;
-		func: Function;
-		instanceOf: Function;
-		number: Function;
-		object: Function;
-		oneOf: Function;
-		oneOfType: Function;
-		renderable: Function;
-		shape: Function;
-		sting: Function;
+		any: PropTypeValidator;
+		array: PropTypeValidator;
+		arrayOf: PropTypeValidator;
+		bool: PropTypeValidator;
+		component: PropTypeValidator;
+		func: PropTypeValidator;
+		instanceOf: PropTypeValidator;
+		number: PropTypeValidator;
+		object: PropTypeValidator;
+		oneOf: PropTypeValidator;
+		oneOfType: PropTypeValidator;
+		renderable: PropTypeValidator;
+		shape: PropTypeValidator;
+		string: PropTypeValidator;
+	}
+
+	interface PropTypeValidatorOptions {
+		[key: string]: PropTypeValidator;
+	}
+
+	interface PropTypeValidator extends Function {
 	}
 
 	interface SyntheticEvent {
@@ -771,109 +780,109 @@ interface ReactComponentFactory<Attributes> {
 }
 
 interface ComponentSpec {
-  /**
-   * The render() method is required. When called, it should examine this.props and this.state and return a single child component.
-   * This child component can be either a virtual representation of a native DOM component (such as <div /> or React.DOM.div())
-   * or another composite component that you've defined yourself.
-   * The render() function should be pure, meaning that it does not modify component state, it returns the same result each time it's invoked,
-   * and it does not read from or write to the DOM or otherwise interact with the browser (e.g., by using setTimeout).
-   * If you need to interact with the browser, perform your work in componentDidMount() or the other lifecycle methods instead.
-   * Keeping render() pure makes server rendering more practical and makes components easier to think about.
-   */
+	/**
+  	 * The render() method is required. When called, it should examine this.props and this.state and return a single child component.
+  	 * This child component can be either a virtual representation of a native DOM component (such as <div /> or React.DOM.div())
+  	 * or another composite component that you've defined yourself.
+  	 * The render() function should be pure, meaning that it does not modify component state, it returns the same result each time it's invoked,
+  	 * and it does not read from or write to the DOM or otherwise interact with the browser (e.g., by using setTimeout).
+  	 * If you need to interact with the browser, perform your work in componentDidMount() or the other lifecycle methods instead.
+  	 * Keeping render() pure makes server rendering more practical and makes components easier to think about.
+  	 */
 	render(): React.Component;
 
-  /**
-   * Invoked once before the component is mounted. The return value will be used as the initial value of this.state.
-   */
+	/**
+  	 * Invoked once before the component is mounted. The return value will be used as the initial value of this.state.
+  	 */
 	getInitialState?(): Object;
 
-  /**
-   * Invoked once when the component is mounted.
-   * Values in the mapping will be set on this.props if that prop is not specified by the parent component (i.e. using an in check).
-   * This method is invoked before getInitialState and therefore cannot rely on this.state or use this.setState.
-   */
+	/**
+  	 * Invoked once when the component is mounted.
+  	 * Values in the mapping will be set on this.props if that prop is not specified by the parent component (i.e. using an in check).
+  	 * This method is invoked before getInitialState and therefore cannot rely on this.state or use this.setState.
+  	 */
 	getDefaultProps?(): Object;
 
-  /**
-   * The propTypes object allows you to validate props being passed to your components.
-   */
-	propTypes?: Object;
+	/**
+  	 * The propTypes object allows you to validate props being passed to your components.
+  	 */
+	propTypes?: React.PropTypeValidatorOptions;
 
-  /**
-   * The mixins array allows you to use mixins to share behavior among multiple components.
-   */
+	/**
+  	 * The mixins array allows you to use mixins to share behavior among multiple components.
+  	 */
 	mixins?: Object[];
 
-  /**
-   * Allows you to define static methods that can be called on the component class.
-   */
+	/**
+  	 * Allows you to define static methods that can be called on the component class.
+  	 */
 	statics?: Object;
 
-  /**
-   * The displayName string is used in debugging messages. JSX sets this value automatically.
-   */
+	/**
+  	 * The displayName string is used in debugging messages. JSX sets this value automatically.
+  	 */
 	displayName?: string;
 
-  /**
-   * Invoked immediately before rendering occurs.
-   * If you call setState within this method, render() will see the updated state and will be executed only once despite the state change.
-   */
+	/**
+  	 * Invoked immediately before rendering occurs.
+  	 * If you call setState within this method, render() will see the updated state and will be executed only once despite the state change.
+  	 */
 	componentWillMount?(): void;
 
-  /**
-   * Invoked immediately after rendering occurs.
-   * At this point in the lifecycle, the component has a DOM representation which you can access via the rootNode argument or by calling this.getDOMNode().
-   * If you want to integrate with other JavaScript frameworks, set timers using setTimeout or setInterval,
-   * or send AJAX requests, perform those operations in this method.
-   */
+	/**
+  	 * Invoked immediately after rendering occurs.
+  	 * At this point in the lifecycle, the component has a DOM representation which you can access via the rootNode argument or by calling this.getDOMNode().
+  	 * If you want to integrate with other JavaScript frameworks, set timers using setTimeout or setInterval,
+  	 * or send AJAX requests, perform those operations in this method.
+  	 */
 	componentDidMount?(): void;
 
-  /**
-   * Invoked when a component is receiving new props. This method is not called for the initial render.
-   *
-   * Use this as an opportunity to react to a prop transition before render() is called by updating the state using this.setState().
-   * The old props can be accessed via this.props. Calling this.setState() within this function will not trigger an additional render.
-   *
-   * @param nextProps the props object that the component will receive
-   */
+	/**
+  	 * Invoked when a component is receiving new props. This method is not called for the initial render.
+  	 *
+  	 * Use this as an opportunity to react to a prop transition before render() is called by updating the state using this.setState().
+  	 * The old props can be accessed via this.props. Calling this.setState() within this function will not trigger an additional render.
+  	 *
+  	 * @param nextProps the props object that the component will receive
+  	 */
 	componentWillReceiveProps?(nextProps: Object): void;
 
-  /**
-   * Invoked before rendering when new props or state are being received.
-   * This method is not called for the initial render or when forceUpdate is used.
-   * Use this as an opportunity to return false when you're certain that the transition to the new props and state will not require a component update.
-   * By default, shouldComponentUpdate always returns true to prevent subtle bugs when state is mutated in place,
-   * but if you are careful to always treat state as immutable and to read only from props and state in render()
-   * then you can override shouldComponentUpdate with an implementation that compares the old props and state to their replacements.
-   *
-   * If performance is a bottleneck, especially with dozens or hundreds of components, use shouldComponentUpdate to speed up your app.
-   *
-   * @param nextProps the props object that the component will receive
-   * @param nextState the state object that the component will receive
-   */
+	/**
+  	 * Invoked before rendering when new props or state are being received.
+  	 * This method is not called for the initial render or when forceUpdate is used.
+  	 * Use this as an opportunity to return false when you're certain that the transition to the new props and state will not require a component update.
+  	 * By default, shouldComponentUpdate always returns true to prevent subtle bugs when state is mutated in place,
+  	 * but if you are careful to always treat state as immutable and to read only from props and state in render()
+  	 * then you can override shouldComponentUpdate with an implementation that compares the old props and state to their replacements.
+  	 *
+  	 * If performance is a bottleneck, especially with dozens or hundreds of components, use shouldComponentUpdate to speed up your app.
+  	 *
+  	 * @param nextProps the props object that the component will receive
+  	 * @param nextState the state object that the component will receive
+  	 */
 	shouldComponentUpdate?(nextProps: Object, nextState: Object): void;
 
-  /**
-   * Invoked immediately before rendering when new props or state are being received. This method is not called for the initial render.
-   * Use this as an opportunity to perform preparation before an update occurs.
-   *
-   * @param nextProps the props object that the component has received
-   * @param nextState the state object that the component has received
-   */
+	/**
+  	 * Invoked immediately before rendering when new props or state are being received. This method is not called for the initial render.
+  	 * Use this as an opportunity to perform preparation before an update occurs.
+  	 *
+  	 * @param nextProps the props object that the component has received
+  	 * @param nextState the state object that the component has received
+  	 */
 	componentWillUpdate?(nextProps: Object, nextState: Object): void;
 
-  /**
-   * Invoked immediately after updating occurs. This method is not called for the initial render.
-   * Use this as an opportunity to operate on the DOM when the component has been updated.
-   *
-   * @param nextProps the props object that the component has received
-   * @param nextState the state object that the component has received
-   */
-	componentDidUpdate?(prevProps: Object, prevState: Object): void;
+	/**
+  	 * Invoked immediately after updating occurs. This method is not called for the initial render.
+  	 * Use this as an opportunity to operate on the DOM when the component has been updated.
+  	 *
+  	 * @param nextProps the props object that the component has received
+  	 * @param nextState the state object that the component has received
+  	 */
+	componentDidUpdate? (prevProps: Object, prevState: Object): void;
 
-  /**
-   * Invoked immediately before a component is unmounted from the DOM.
-   * Perform any necessary cleanup in this method, such as invalidating timers or cleaning up any DOM elements that were created in componentDidMount.
-   */
+	/**
+  	 * Invoked immediately before a component is unmounted from the DOM.
+  	 * Perform any necessary cleanup in this method, such as invalidating timers or cleaning up any DOM elements that were created in componentDidMount.
+  	 */
 	componentWillUnmount?(): void;
 }
